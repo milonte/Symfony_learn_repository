@@ -1,0 +1,28 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="row">
+    <div class="col-6">
+        <h4>Articles</h4>
+        <ul>
+            {% for article in articles %}
+                <li>
+                    {{ article.id }}   {{ article.title }}
+                    <a href="/showArticle/{{article.id}}">Details</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-6">
+    <h4>Categories</h4>
+    <ul>
+        {% for category in categories %}
+            <li>
+                {{ category.id }}   {{ category.name }}
+                <a href="/showCategory/{{category.id}}">Details</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
