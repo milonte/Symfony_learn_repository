@@ -6,7 +6,7 @@ use App\Entity\Article;
 use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  *
@@ -76,7 +76,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/category/{id}", methods={"GET"}, name="category_details")
      */
-    public function categoryDetails(Category $category)
+    public function categoryDetails(Category $category) :Response
     { 
         return $this->render('blog/category_details.html.twig', [
             'category'=>$category,
@@ -91,7 +91,7 @@ class BlogController extends AbstractController
    /**
  * @Route("/article/{id}", name="article_details")
  */
-    public function articleDetails(Article $article)
+    public function articleDetails(Article $article) :Response
     {
         return $this->render('blog/article_details.html.twig', [
             'article'=>$article,
