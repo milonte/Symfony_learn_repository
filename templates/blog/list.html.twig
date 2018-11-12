@@ -8,7 +8,8 @@
             {% for article in articles %}
                 <li>
                     {{ article.id }}   {{ article.title }}
-                    <a href="/showArticle/{{article.id}}">Details</a>
+                    {# <a href="/showArticle/{{article.id}}">Details</a> #}
+                    <a href="{{ path('article_details', {'id': article.id }) }}">Details</a>
                 </li>
             {% endfor %}
         </ul>
@@ -19,7 +20,8 @@
         {% for category in categories %}
             <li>
                 {{ category.id }}   {{ category.name }}
-                <a href="/showCategory/{{category.id}}">Details</a>
+                {# <a href="/showCategory/{{category.id}}">Details</a> #}
+                <a href="{{ path('category_details', {'id': category.id }) }}">Details</a>
             </li>
         {% endfor %}
         </ul>

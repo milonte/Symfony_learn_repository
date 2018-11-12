@@ -73,10 +73,41 @@ class BlogController extends AbstractController
         ]);
     }
 
-     /**
-     * @Route("/showArticle/{id}", methods={"GET"}, name="articleDetails")
+    /**
+     * @Route("/category/{id}", methods={"GET"}, name="category_details")
      */
-    public function articleDetails(int $id)
+    public function categoryDetails(Category $category)
+    { 
+        return $this->render('blog/category_details.html.twig', [
+            'category'=>$category,
+            'articles' => $this
+                ->getDoctrine()
+                ->getRepository(Article::class)
+                ->findAll(['articles' => $category->getArticles() ])
+        ]);
+        
+    }
+
+   /**
+ * @Route("/article/{id}", name="article_details")
+ */
+    public function articleDetails(Article $article)
+    {
+        return $this->render('blog/article_details.html.twig', [
+            'article'=>$article,
+            'category' => $this
+                ->getDoctrine()
+                ->getRepository(Category::class)
+                ->find(['id' => $article->getCategory()->getId() ])
+        ]);
+    }
+
+    //ancienne solut°
+
+    // /**
+    // * @Route("/showArticle/{id}", methods={"GET"}, name="articleDetails")
+    // */
+    /* public function articleDetails(int $id)
     { 
         $article = $this->getDoctrine()  
             ->getRepository(Article::class)  
@@ -85,12 +116,12 @@ class BlogController extends AbstractController
         $category = $article->getCategory();
 
         return $this->render('blog/article_details.html.twig', ['article' => $article, 'category' => $category]);   
-    }
+    } */
 
-    /**
-     * @Route("/showCategory/{id}", methods={"GET"}, name="categoryDetails")
-     */
-    public function categoryDetails(int $id)
+    // /**
+    // * @Route("/showCategory/{id}", methods={"GET"}, name="categoryDetails")
+    // */
+    /* public function categoryDetails(int $id)
     { 
         $category = $this->getDoctrine()  
             ->getRepository(Category::class)  
@@ -101,14 +132,5 @@ class BlogController extends AbstractController
         return $this->render('blog/category_details.html.twig', ['articles' => $articles, 'category' => $category]);
         
     }
-
-    /**
-     * @Route("/blog/{page<[a-z0-9-]+>?article-sans-nom}", methods={"GET"}, name="blog")
-     */
-    public function show($page)
-    {
-        return $this->render('blog/index.html.twig', ['page' => str_replace("-", " ", ucwords($page))]);
-
-    }
-
+ */
 }
