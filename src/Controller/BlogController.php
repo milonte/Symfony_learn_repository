@@ -83,9 +83,8 @@ class BlogController extends AbstractController
             'articles' => $this
                 ->getDoctrine()
                 ->getRepository(Article::class)
-                ->findAll(['articles' => $category->getArticles() ])
+                ->findBy(['category'=>$category->getId()], ['id' => 'DESC'], 3)
         ]);
-        
     }
 
    /**
@@ -98,8 +97,10 @@ class BlogController extends AbstractController
             'category' => $this
                 ->getDoctrine()
                 ->getRepository(Category::class)
-                ->find(['id' => $article->getCategory()->getId() ])
+                ->findOneById($article->getCategory()->getId())
+                //ou ->find(['id' => $article->getCategory()->getId()])
         ]);
+
     }
 
     //ancienne solut°
@@ -133,4 +134,5 @@ class BlogController extends AbstractController
         
     }
  */
+
 }

@@ -47,4 +47,17 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneByName($title)
+    {
+        $qBuilder = $this
+        ->createQueryBuilder('a')
+        ->where('a.title = :title')
+        ->setParameter('title', $title)
+        ->orderBy('cat.id', 'DESC')
+        ->getQuery()
+        ->getResult();
+
+        return $qBuilder;
+    }
 }
