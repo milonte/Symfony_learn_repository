@@ -7,7 +7,8 @@ use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-
+use App\Form\CategoryType;
+use Symfony\Component\HttpFoundation\Request;
 /**
  *
  */
@@ -41,10 +42,10 @@ class BlogController extends AbstractController
         return $this->render('blog/list.html.twig', ['articles' => $articles, 'categories' => $categories]);
     }
 
-    /**
-     * @Route("/add", methods={"GET"})
-     */
-    public function add()
+   // /**
+   //  * @Route("/add", methods={"GET"})
+   //  */
+   /*  public function add()
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -71,7 +72,7 @@ class BlogController extends AbstractController
             ->getRepository(Article::class)
             ->findAll()
         ]);
-    }
+    } */
 
     /**
      * @Route("/category/{name}", methods={"GET"}, name="show_category")
@@ -140,4 +141,35 @@ class BlogController extends AbstractController
     }
  */
 
+    /** 
+     * Add new form
+     *
+     * 
+     *
+     * @Route("/article/add/", name="add_category")
+     */
+    public function addForm(Request $request) :Response
+    {
+        $category = new Category();
+        $form = $this->createForm(
+            CategoryType::class,
+            $category,
+             ['method' => Request::METHOD_POST]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($category);
+            $em->flush();
+        }
+
+        return $this->render(
+            'blog/category_add.html.twig',
+            [
+                'category' => $category,
+                'form' => $form->createView(),
+            ]
+        );
+    }
 }
