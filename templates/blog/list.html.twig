@@ -9,7 +9,7 @@
                 <li>
                     {{ article.id }}   {{ article.title }}
                     {# <a href="/showArticle/{{article.id}}">Details</a> #}
-                    <a href="{{ path('article_details', {'id': article.id }) }}">Details</a>
+                    <a href="{{ path('show_article', {'id': article.id }) }}">Details</a>
                 </li>
             {% endfor %}
         </ul>
@@ -21,7 +21,7 @@
             <li>
                 {{ category.id }}   {{ category.name }}
                 {# <a href="/showCategory/{{category.id}}">Details</a> #}
-                <a href="{{ path('category_details', {'id': category.id }) }}">Details</a>
+                <a href="{{ path('show_category', {'name': category.name }) }}">Details</a>
             </li>
         {% endfor %}
         </ul>
@@ -31,5 +31,7 @@
 {# <a href="{{ path('list', { 'slug': "javascript-vs-php" }) }}">
     Testing show() method from BlogController with a real article s slug.
 </a> #}
+
+ <a href="http://localhost:8000/category/Javascript">Go to javascript category</a>
 
 {% endblock %}

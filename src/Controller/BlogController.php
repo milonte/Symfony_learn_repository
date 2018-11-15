@@ -74,10 +74,15 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/category/{id}", methods={"GET"}, name="category_details")
+     * @Route("/category/{name}", methods={"GET"}, name="show_category")
      */
-    public function categoryDetails(Category $category) :Response
+    public function showByCategory(string $name) :Response
     { 
+        $category = $this
+        ->getDoctrine()
+        ->getRepository(Category::class)
+        ->findOneByName($name);
+
         return $this->render('blog/category_details.html.twig', [
             'category'=>$category,
             'articles' => $this
@@ -88,9 +93,9 @@ class BlogController extends AbstractController
     }
 
    /**
- * @Route("/article/{id}", name="article_details")
+ * @Route("/article/{id}", name="show_article")
  */
-    public function articleDetails(Article $article) :Response
+    public function showByArticle(Article $article) :Response
     {
         return $this->render('blog/article_details.html.twig', [
             'article'=>$article,
