@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\CategoryType;
+use App\Form\ArticleType;
 use Symfony\Component\HttpFoundation\Request;
 /**
  *
@@ -146,9 +147,9 @@ class BlogController extends AbstractController
      *
      * 
      *
-     * @Route("/article/add/", name="add_category")
+     * @Route("/category/add/", name="add_category")
      */
-    public function addForm(Request $request) :Response
+    public function addCategory(Request $request) :Response
     {
         $category = new Category();
         $form = $this->createForm(
@@ -168,6 +169,38 @@ class BlogController extends AbstractController
             'blog/category_add.html.twig',
             [
                 'category' => $category,
+                'form' => $form->createView(),
+            ]
+        );
+    }
+
+    /** 
+     * Add new form
+     *
+     * 
+     *
+     * @Route("/article/add/", name="add_article")
+     */
+    public function addArticle(Request $request) :Response
+    {
+        $article = new Article();
+        $form = $this->createForm(
+            ArticleType::class,
+            $article,
+             ['method' => Request::METHOD_POST]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($article);
+            $em->flush();
+        }
+
+        return $this->render(
+            'blog/article_add.html.twig',
+            [
+                'article' => $article,
                 'form' => $form->createView(),
             ]
         );
