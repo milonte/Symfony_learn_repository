@@ -1,7 +1,20 @@
     {{ article.id }}   {{ article.title }}
+    <br /><br /> 
+    Id : {{ category.id }}
     <br />
-    {{ article.content }}
-    <br />
-    {{ category.id }}
+    Content : {{ article.content }}
+    <br /><br />
+    
+    Tags :
+    <ul>
+     {% for tag in tags %}
+        <li><a href="{{ path('show_tag', {'id': tag.id }) }}">{{tag.name}}</a></li>
+    {% else %}
+        <li>Pas de tags associés</li>
+    {% endfor %}
+    </ul>
+        
+    
+   
     <br /><br />
     <a href="/list">Back to list</a>

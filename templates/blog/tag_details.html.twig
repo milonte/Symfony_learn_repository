@@ -1,0 +1,8 @@
+    {{ tag.id }}   {{ tag.name }}
+    <br />
+    <ul>
+    {% for article in articles %}
+    <li>{{ article.id }} <a href="{{ path('show_article', {'id': article.id }) }}">{{ article.title }}</a></li>
+    {% endfor %}
+    </ul>
+    <a href="/list">Back to list</a>

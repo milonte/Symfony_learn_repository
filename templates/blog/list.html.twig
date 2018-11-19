@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="row">
-    <div class="col-6">
+    <div class="col-4">
         <h4>Articles</h4>
         <a href="{{ path('add_article') }}">Ajouter un article</a>
         <ul>
@@ -15,7 +15,7 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="col-6">
+    <div class="col-4">
     <h4>Categories</h4>
     <a href="{{ path('add_category') }}">Ajouter une categorie</a>
     <ul>
@@ -27,6 +27,17 @@
             </li>
         {% endfor %}
         </ul>
+    </div>
+    <div class="col-4">
+    <h4>Tags :</h4>
+    <a href="{{ path('add_tag') }}">Ajouter un tag</a>
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag.name }} <a href="{{ path('show_tag', {'id': tag.id }) }}">Details</a></li>
+        {% else %}
+            <li>No tags for this article</li>
+        {% endfor %}
+    </ul>
     </div>
 </div>
 

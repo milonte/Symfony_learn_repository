@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\Tag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\CategoryType;
 use App\Form\ArticleType;
+use App\Form\TagType;
 use Symfony\Component\HttpFoundation\Request;
 /**
  *
@@ -30,6 +32,11 @@ class BlogController extends AbstractController
             ->getRepository(Category::class)
             ->findAll();
 
+        $tags = $this
+        ->getDoctrine()
+        ->getRepository(Tag::class)
+        ->findAll();
+
         if (!$articles) {
             throw $this->createNotFoundException(
                 'No article found in article\'s table.'
@@ -40,7 +47,7 @@ class BlogController extends AbstractController
                 'No category found in category\'s table.'
             );
         }
-        return $this->render('blog/list.html.twig', ['articles' => $articles, 'categories' => $categories]);
+        return $this->render('blog/list.html.twig', ['articles' => $articles, 'categories' => $categories, 'tags' => $tags]);
     }
 
    // /**
@@ -85,13 +92,16 @@ class BlogController extends AbstractController
         ->getRepository(Category::class)
         ->findOneByName($name);
 
+        $articles = $this
+        ->getDoctrine()
+        ->getRepository(Article::class)
+        ->findByCategory($category, ['id' => 'DESC'], 3);
+        // ou ->findBy(['category'=>$category], ['id' => 'DESC'], 3);
+
         return $this->render('blog/category_details.html.twig', [
             'category'=>$category,
-            'articles' => $this
-                ->getDoctrine()
-                ->getRepository(Article::class)
-                ->findBy(['category'=>$category->getId()], ['id' => 'DESC'], 3)
-        ]);
+            'articles' => $articles
+            ]);
     }
 
    /**
@@ -99,13 +109,35 @@ class BlogController extends AbstractController
  */
     public function showByArticle(Article $article) :Response
     {
+        $category = $this
+        ->getDoctrine()
+        ->getRepository(Category::class)
+        ->findOneById($article->getCategory());
+        //ou ->find(['id' => $article->getCategory()->getId()])
+
+        $tags = $this
+        ->getDoctrine()
+        ->getRepository(Tag::class)
+        ->findAll();
+
         return $this->render('blog/article_details.html.twig', [
             'article'=>$article,
-            'category' => $this
-                ->getDoctrine()
-                ->getRepository(Category::class)
-                ->findOneById($article->getCategory()->getId())
-                //ou ->find(['id' => $article->getCategory()->getId()])
+            'tags' => $tags,
+            'category' => $category
+        ]);
+
+    }
+
+      /**
+    * @Route("/tag/{id}", name="show_tag")
+    */
+    public function showByTag(Tag $tag) :Response
+    {
+        $articles = $tag->getArticles();
+
+        return $this->render('blog/tag_details.html.twig', [
+            'tag'=>$tag,
+            'articles' => $articles
         ]);
 
     }
@@ -175,7 +207,7 @@ class BlogController extends AbstractController
     }
 
     /** 
-     * Add new form
+     * Add new article
      *
      * 
      *
@@ -202,6 +234,38 @@ class BlogController extends AbstractController
             [
                 'article' => $article,
                 'form' => $form->createView(),
+            ]
+        );
+    }
+
+    /** 
+     * Add new tag
+     *
+     * 
+     *
+     * @Route("/tag/add/", name="add_tag")
+     */
+    public function addTag(Request $request) :Response
+    {
+        $tag = new Tag();
+        $form = $this->createForm(
+            TagType::class,
+            $tag,
+             ['method' => Request::METHOD_POST]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($tag);
+            $em->flush();
+        }
+
+        return $this->render(
+            'blog/tag_add.html.twig',
+            [
+                'tag' => $tag,
+                'form' => $form->createView()
             ]
         );
     }
