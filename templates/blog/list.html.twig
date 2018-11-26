@@ -8,7 +8,7 @@
         <ul>
             {% for article in articles %}
                 <li>
-                    {{ article.id }}   {{ article.title }}
+                    {{ article.id }}   {{ article.slug }}
                     {# <a href="/showArticle/{{article.id}}">Details</a> #}
                     <a href="{{ path('show_article', {'id': article.id }) }}">Details</a>
                 </li>

@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker;
+use App\Service\Slugify;
 
 class ArticleFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -22,9 +23,14 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
             $faker = Faker\Factory::create('en_US');
 
             $article = new Article();
+            
             $article->setTitle(mb_strtolower($faker->sentence));
             $article->setContent(mb_strtolower($faker->text));
-
+            
+            $slugify = new Slugify();
+            $slug = $slugify->generate($article->getTitle());
+            $article->setSlug($slug);
+            
             $manager->persist($article);
             $article->setCategory($this->getReference('category_index_'.rand(0,4)));
         }
